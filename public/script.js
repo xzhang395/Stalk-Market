@@ -14,7 +14,6 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 var today = new Date();
-console.log("MXQ: " + today);
 var database = firebase.database();
 
 var ref = database.ref("market/" + composeHashKey(today) + "/");
@@ -25,19 +24,30 @@ $("#myBtn").click(function() {
   var str = input.val();
   console.log(str);
   // composing the current date as the hash key
-  database.ref("market/" + composeHashKey(today) + "/").set({
+  database.ref("market/" + composeHashKey(today) + "/").push({
     name: str,
     email: "mark's email",
-    price: 42
+    price: 100
   });
 });
 
 function gotData(data) {
-  var entry = data.val();
-  console.log(entry);
-  console.log("Name: "+ entry.name);
-  console.log("Email: "+ entry.email);
-  console.log("Price: "+ entry.price);
+  var dataset = data.val();
+  var keys = Object.keys(dataset);
+  // console.log(keys);
+  array=[];
+  for (var i = 0; i< keys.length ; i++) {
+    k = keys[i];
+    array.push(dataset[k]);
+  }
+  array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
+  console.log(array);
+}
+
+function compareEntry(a, b) {
+  if (a.price > b.price) return -1;
+  if (b.price > a.price) return 1;
+  return 0;
 }
 
 function errData(data) {
