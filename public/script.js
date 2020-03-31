@@ -20,10 +20,10 @@ var input = $("#name")
 $("#myBtn").click(function(){
   var str = input.val();
   console.log(str);
+  database.ref('market').push(
+    {
+      name: str,
+      price: "$$"
+    }
+  );
 });
-database.ref('market').push(
-  {
-    name: "test name",
-    price: "$$"
-  }
-);
