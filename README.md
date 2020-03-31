@@ -1,15 +1,15 @@
 # Stalk-Market
 find the best turnip price
 
-# Setup firebase
-//instiall firebase CLI
+### Setup firebase
+instiall firebase CLI
 $ npm install -g firebase-tools
 
-//login firebase
-$ firebase login
+### login firebase
+firebase login
 
-//Initialize your project
-$ firebase init
+### Initialize your project
+firebase init
 
 # Deploy your site
 $ firebase deploy --only hosting:stalk-market-4dc91
