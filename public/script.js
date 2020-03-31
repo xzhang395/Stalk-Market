@@ -20,6 +20,27 @@ var ref = database.ref("market/" + composeHashKey(today) + "/");
 ref.on('value', gotData, errData);
 var input = $("#name");
 
+// countdown timer
+var countDownDate = new Date("Mar 31, 2020 12:00:00").getTime();
+
+var x = setInterval(function() {
+
+  // Find the distance between now and the count down date
+  var now = new Date();
+  var distance = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  // Display the result
+  display = hours + "h " + minutes + "mins " + seconds + "seconds ";
+  console.log(display);
+  return display;
+}, 1000);
+
 $("#myBtn").click(function() {
   var str = input.val();
   console.log(str);
@@ -64,8 +85,8 @@ function composeHashKey(date) {
 }
 
 function composeDateString(date) {
-  var dd = String(today.getDate()).padStart(2, "0");
-  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = today.getFullYear();
+  var dd = String(date.getDate()).padStart(2, "0");
+  var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
+  var yyyy = date.getFullYear();
   return mm + "-" + dd + "-" + yyyy;
 }
