@@ -18,12 +18,14 @@ var database = firebase.database();
 
 var ref = database.ref("market/" + composeHashKey(today) + "/");
 ref.on('value', gotData, errData);
-var input = $("#name");
+var priceInput = $("#price");
+var islandInput = $("#island");
+var nameInput = $("#name");
 
 // countdown timer
 var countDownDate = new Date("Mar 31, 2020 12:00:00").getTime();
 
-var x = setInterval(function() {
+var countdownStringDisplay = setInterval(function () {
 
   // Find the distance between now and the count down date
   var now = new Date();
@@ -33,36 +35,52 @@ var x = setInterval(function() {
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
   var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+  // var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
   // Display the result
-  display = hours + "h " + minutes + "mins " + seconds + "seconds ";
-  console.log(display);
+  display = "Expires in " + hours + "h " + minutes + "mins ";
+  $("#expiration").text(display);
+  // console.log(display);
   return display;
 }, 1000);
 
-$("#myBtn").click(function() {
-  var str = input.val();
-  console.log(str);
+
+
+$("#myBtn").click(function () {
+  var price = priceInput.val();
+  var island = islandInput.val();
+  var name = nameInput.val();
   // composing the current date as the hash key
   database.ref("market/" + composeHashKey(today) + "/").push({
-    name: str,
-    email: "mark's email",
-    price: 100
+    name: name,
+    island: island,
+    price: price
   });
 });
+var entry
 
 function gotData(data) {
   var dataset = data.val();
+  // console.log(dataset);
   var keys = Object.keys(dataset);
-  // console.log(keys);
-  array=[];
-  for (var i = 0; i< keys.length ; i++) {
+  array = [];
+  for (var i = 0; i < keys.length; i++) {
     k = keys[i];
     array.push(dataset[k]);
   }
   array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
-  console.log(array);
+  
+  //update price
+  $("#max-price").text(array[0].price);
+  //update island
+  $("#best-island").text("at " + array[0].island);
+  //update ranking
+  $("table").empty();
+  $("table").append("<tr><th>Ranking</th><th>Price</th><th>Island</th><th>Owner</th></tr>)");
+  for (var i = 0; i < array.length; i++) {
+    var markup = "<tr><td>" + (i + 1) + "</td><td>" + array[i].price + "</td><td>" + array[i].island + "</td><td>" + array[i].name + "</td></tr>";
+    $("table").append(markup);
+  }
 }
 
 function compareEntry(a, b) {
@@ -71,9 +89,10 @@ function compareEntry(a, b) {
   return 0;
 }
 
+// $( "#expiration" ).text( "Price expires in"+ time );
+
 function errData(data) {
   // TODO: figure out what happens when data not present yet. 
-  console.log(data);
 }
 
 function composeHashKey(date) {
