@@ -84,8 +84,8 @@ function gotData(data) {
 }
 
 function compareEntry(a, b) {
-  if (a.price > b.price) return -1;
-  if (b.price > a.price) return 1;
+  if (Number(a.price) > Number(b.price)) return -1;
+  if (Number(b.price) > Number(a.price)) return 1;
   return 0;
 }
 
