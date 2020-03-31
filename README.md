@@ -21,3 +21,6 @@ $ firebase deploy --only hosting:stalk-market-4dc91
 
 # How to run locally
 $ python -m SimpleHTTPServer
+
+#Hosting URL:
+[https://stalk-market-4dc91.firebaseapp.com](https://stalk-market-4dc91.firebaseapp.com)
