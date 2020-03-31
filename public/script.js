@@ -23,7 +23,7 @@ var islandInput = $("#island");
 var nameInput = $("#name");
 
 // countdown timer
-var countDownDate = new Date("Mar 31, 2020 12:00:00").getTime();
+var countDownDate = new Date("Mar 31, 2020 20:00:00").getTime();
 
 var countdownStringDisplay = setInterval(function () {
 

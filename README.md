@@ -37,4 +37,4 @@ $ python -m http.server
 ```
 
 #Hosting URL:
-[https://stalk-market-4dc91.firebaseapp.com](https://stalk-market-4dc91.firebaseapp.com)
+[stalk-market.com](stalk-market.com)
