@@ -23,7 +23,7 @@ var islandInput = $("#island");
 var nameInput = $("#name");
 
 // countdown timer
-var countDownDate = new Date("Mar 31, 2020 20:00:00").getTime();
+var countDownDate = new Date("Apr 1, 2020 22:00:00").getTime();
 
 var countdownStringDisplay = setInterval(function () {
 
@@ -48,8 +48,8 @@ var countdownStringDisplay = setInterval(function () {
 
 $("#myBtn").click(function () {
   var price = priceInput.val();
-  var island = islandInput.val();
-  var name = nameInput.val();
+  var island = scrubInput(islandInput.val());
+  var name = scrubInput(nameInput.val());
   // composing the current date as the hash key
   database.ref("market/" + composeHashKey(today) + "/").push({
     name: name,
@@ -59,6 +59,10 @@ $("#myBtn").click(function () {
 });
 var entry
 
+function scrubInput(str) {
+  return str.replace("[(;)]","")
+  
+}
 function gotData(data) {
   var dataset = data.val();
   // console.log(dataset);
