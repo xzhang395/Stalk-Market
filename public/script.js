@@ -75,14 +75,14 @@ function gotData(data) {
   array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
   
   //update price
-  $("#max-price").text(array[0].price);
+  $("#max-price").text(scrubInput(array[0].price));
   //update island
-  $("#best-island").text("at " + array[0].island);
+  $("#best-island").text("at " + scrubInput(array[0].island));
   //update ranking
   $("table").empty();
   $("table").append("<tr><th>Ranking</th><th>Price</th><th>Island</th><th>Owner</th></tr>)");
   for (var i = 0; i < array.length; i++) {
-    var markup = "<tr><td>" + (i + 1) + "</td><td>" + array[i].price + "</td><td>" + array[i].island + "</td><td>" + array[i].name + "</td></tr>";
+    var markup = "<tr><td>" + (i + 1) + "</td><td>" + scrubInput(array[i].price) + "</td><td>" + scrubInput(array[i].island) + "</td><td>" + scrubInput(array[i].name) + "</td></tr>";
     $("table").append(markup);
   }
 }
