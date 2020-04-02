@@ -54,12 +54,14 @@ $("#myBtn").click(function() {
   var island = scrubInput(islandInput.val());
   var name = scrubInput(nameInput.val());
   // composing the current date as the hash key
+  var createdTimestamp = new Date().toISOString();
+  var expiringTimestamp = nextExpiringDate().toISOString();
   database.ref("market/" + composeHashKey(today) + "/").push({
     name: name,
     island: island,
     price: price,
-    createdAtTimestamp: new Date().toISOString(),
-    expiringAtTimestamp: nextExpiringDate()
+    createdAtTimestamp: createdTimestamp,
+    expiringAtTimestamp: expiringTimestamp
   });
 });
 
