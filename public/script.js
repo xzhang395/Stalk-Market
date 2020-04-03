@@ -88,6 +88,8 @@ function gotData(data) {
   $("#max-price").text(scrubInput(array[0].price));
   //update island
   $("#best-island").text("at " + scrubInput(array[0].island));
+  // update "global" countdown date variable
+  countDownDate = new Date(array[0].expiringAtTimestamp);
   //update ranking
   $("table").empty();
   $("table").append(
