@@ -11,6 +11,7 @@ class Rank extends React.Component {
     render() {
       return (
         <table className="table">
+         <tbody>
         <tr>
           <th>Ranking</th>
           <th>Price</th>
@@ -23,6 +24,7 @@ class Rank extends React.Component {
           <td>-</td>
           <td>-</td>
         </tr>
+        </tbody>
       </table>
       );
     }

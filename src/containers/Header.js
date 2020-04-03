@@ -10,12 +10,17 @@ class Header extends React.Component {
     }
     
     componentDidMount() {
-      console.log(this.props.data);
+      console.log("header value "+this.props.data);
     }
+
+    componentWillReceiveProps({someProp}) {
+      this.setState({...this.state,someProp})
+    }
+    //{this.props.data[0]}
     render() {
       return (
         <div className="Header">
-        <span id="max-price">--</span>
+        <span id="max-price">-</span>
         <br />
         <span id="best-island">at -</span>
         <Timer />
