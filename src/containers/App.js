@@ -24,12 +24,14 @@ class App extends React.Component {
     var ref = Firebase.database().ref("market/" + composeHashKey(today) + "/");
     let array = [];
     ref.on('value', snapshot => {
+      array = [];
       const dataset = snapshot.val();
       var keys = Object.keys(dataset);
       for (var i = 0; i < keys.length; i++) {
         var k = keys[i];
         array.push(dataset[k]);
       }
+      console.log(array)
       array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
       this.setState({ userData: array });
     });

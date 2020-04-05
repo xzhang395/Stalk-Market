@@ -7,6 +7,7 @@ class Rank extends React.Component {
   }
 
   renderTableData() {
+    console.log(this.props.data)
     return this.props.data.map((student, index) => {
       const { price, island, name } = student //destructuring
       return (
