@@ -1,41 +1,46 @@
-import React from 'react';
-import './App.css';
-import pig from '../img/daisy.png'
-import Form from './Form.js'
-import Rank from './Rank.js'
-import Header from './Header.js'
-import Firebase from '../components/firebase.js'
+import React from "react";
+import { composeHashKey } from "../helper/functions.js";
+import "./App.css";
+import pig from "../img/daisy.png";
+import Form from "./Form.js";
+import Rank from "./Rank.js";
+import Header from "./Header.js";
+import Firebase from "../components/firebase.js";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userData: [{
-        price: 0,
-        island: "",
-        name: ""
-      }
+      userData: [
+        {
+          price: 0,
+          island: "",
+          name: ""
+        }
       ]
     };
-
   }
   getUserData = () => {
-    var today = new Date();
-    var ref = Firebase.database().ref("market/" + composeHashKey(today) + "/");
-    let array = [];
-    ref.on('value', snapshot => {
+    var now = new Date();
+    var hashKey = composeHashKey(now);
+    var ref = Firebase.database().ref("market/" + hashKey + "/");
+    let array;
+    ref.on("value", snapshot => {
       array = [];
       const dataset = snapshot.val();
       var keys = Object.keys(dataset);
       for (var i = 0; i < keys.length; i++) {
         var k = keys[i];
-        array.push(dataset[k]);
+        var dataEntry = dataset[k];
+        var expiringTimestamp = new Date(dataEntry.expiringAtTimestamp);
+        if (now.getTime() < expiringTimestamp.getTime()) {
+          array.push(dataEntry);
+        }
       }
-      console.log(array)
       array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
       this.setState({ userData: array });
     });
-  }
+  };
 
   componentDidMount() {
     this.getUserData();
@@ -65,17 +70,4 @@ function compareEntry(a, b) {
   return 0;
 }
 
-function composeHashKey(date) {
-  var fullDate = composeDateString(date);
-  if (date.getHours() < 12) {
-    return fullDate + "-0"; // morning price
-  }
-  return fullDate + "-1"; // afternoon price
-}
-function composeDateString(date) {
-  var dd = String(date.getDate()).padStart(2, "0");
-  var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-  var yyyy = date.getFullYear();
-  return yyyy + "-" + mm + "-" + dd;
-}
 export default App;

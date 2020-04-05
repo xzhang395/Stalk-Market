@@ -1,10 +1,6 @@
 import React from 'react';
-import Firebase from '../components/firebase.js'
 
 class Rank extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
   renderTableData() {
     console.log(this.props.data)
