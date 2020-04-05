@@ -1,6 +1,9 @@
 # Stalk-Market
 crowdsourcing the best turnip price
 
+#Hosting URL:
+[stalk-market.com](stalk-market.com)
+
 ### Setup firebase
 
 Install firebase CLI
@@ -26,15 +29,11 @@ $ firebase deploy --only hosting:stalk-market-4dc91
 ```
 
 # How to run locally
-Python 2
-```
-$ python -m SimpleHTTPServer
-```
 
-Python 3
-```
-$ python -m http.server
-```
+### `yarn start`
 
-#Hosting URL:
-[stalk-market.com](stalk-market.com)
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
