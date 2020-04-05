@@ -23,7 +23,7 @@ class Form extends React.Component {
         island: this.state.islandName,
         price: this.state.ownerName,
         createdAtTimestamp: today.toISOString(),
-        expiringAtTimestamp: nextExpiringDate(today)
+        expiringAtTimestamp: nextExpiringDate(today).toISOString()
       });
 
     console.log("DATA SAVED");
