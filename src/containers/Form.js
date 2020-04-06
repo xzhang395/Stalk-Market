@@ -19,9 +19,9 @@ class Form extends React.Component {
     Firebase.database()
       .ref("market/" + composeHashKey(today) + "/")
       .push({
-        name: this.state.price,
+        name: this.state.ownerName,
         island: this.state.islandName,
-        price: this.state.ownerName,
+        price: this.state.price,
         createdAtTimestamp: today.toISOString(),
         expiringAtTimestamp: nextExpiringDate(today).toISOString()
       });

@@ -7,15 +7,14 @@ class Timer extends Component {
 
   render() {
     var display;
+    // Find the distance between now and the count down date
+    var now = new Date();
+    var expirationDate = new Date(this.props.expirationTime);
+    var distance = expirationDate - now;
     // if there's nobody current on the high score list, sub in a "-" in the interim.
-    if (typeof this.props.expirationDate === "undefined") {
+    if (Number.isNaN(distance)) {
       display = "-";
     } else {
-      // Find the distance between now and the count down date
-      var now = new Date();
-      var expirationDate = new Date(this.props.expirationTime);
-      var distance = expirationDate - now;
-
       // Time calculations for days, hours, minutes and seconds
       var hours = Math.floor(
         (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
