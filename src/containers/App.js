@@ -27,7 +27,7 @@ class App extends React.Component {
     let array;
     ref.on("value", snapshot => {
       array = [];
-      const dataset = snapshot.val();
+      var dataset = snapshot.val();
       var keys = Object.keys(dataset);
       for (var i = 0; i < keys.length; i++) {
         var k = keys[i];
@@ -38,7 +38,11 @@ class App extends React.Component {
         }
       }
       array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
-      this.setState({ userData: array });
+      if (array.length === 0) {
+        this.setState({ userData: [{ price: "-", name: "-", island: "-" }] });
+      } else {
+        this.setState({ userData: array });
+      }
     });
   };
 
