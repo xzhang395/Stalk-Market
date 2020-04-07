@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { Component } from "react";
 
-class Rank extends React.Component {
-
+class Rank extends Component {
   renderTableData() {
-    console.log(this.props.data)
     return this.props.data.map((student, index) => {
-      const { price, island, name } = student //destructuring
+      const { price, island, name } = student; //destructuring
       return (
         <tr key={index}>
           <td>{index + 1}</td>
@@ -13,8 +11,8 @@ class Rank extends React.Component {
           <td>{island}</td>
           <td>{name}</td>
         </tr>
-      )
-    })
+      );
+    });
   }
 
   render() {

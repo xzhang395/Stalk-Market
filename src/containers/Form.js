@@ -1,6 +1,6 @@
 import React from "react";
 import Firebase from "../components/firebase.js";
-import { nextExpiringDate, composeHashKey } from "../helper/functions.js";
+import { nextExpiringDate, composeHashkey } from "../helper/functions.js";
 
 class Form extends React.Component {
   constructor(props) {
@@ -17,7 +17,7 @@ class Form extends React.Component {
   writeUserData = () => {
     var today = new Date();
     Firebase.database()
-      .ref("market/" + composeHashKey(today) + "/")
+      .ref("market/" + composeHashkey(today) + "/")
       .push({
         name: this.state.ownerName,
         island: this.state.islandName,

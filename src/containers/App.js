@@ -1,5 +1,5 @@
 import React from "react";
-import { composeHashKey } from "../helper/functions.js";
+import { composeHashkey, composePrevHashkey } from "../helper/functions.js";
 import "./App.css";
 import pig from "../img/daisy.png";
 import Form from "./Form.js";
@@ -20,30 +20,40 @@ class App extends React.Component {
       ]
     };
   }
+
   getUserData = () => {
     var now = new Date();
-    var hashKey = composeHashKey(now);
-    var ref = Firebase.database().ref("market/" + hashKey + "/");
-    let array;
-    ref.on("value", snapshot => {
-      array = [];
-      var dataset = snapshot.val();
-      var keys = Object.keys(dataset);
-      for (var i = 0; i < keys.length; i++) {
-        var k = keys[i];
-        var dataEntry = dataset[k];
-        var expiringTimestamp = new Date(dataEntry.expiringAtTimestamp);
-        if (now.getTime() < expiringTimestamp.getTime()) {
-          array.push(dataEntry);
-        }
+    var hashkey = composeHashkey(now);
+    var prevHashkey = composePrevHashkey(now);
+    var db = Firebase.database();
+    var ref = db.ref("market/" + hashkey + "/");
+    ref.on(
+      "value",
+      snapshot => {
+        let array = extractUnexpiredEntriesFromSnapshot(snapshot);
+        db.ref("market/" + prevHashkey + "/")
+          .once("value")
+          .then(pastSnapshot => {
+            // using this cuz array.concat() didn't work.
+            let merged = [
+              ...array,
+              ...extractUnexpiredEntriesFromSnapshot(pastSnapshot)
+            ];
+            merged.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
+
+            if (merged.length === 0) {
+              this.setState({
+                userData: [{ price: "-", name: "-", island: "-" }]
+              });
+            } else {
+              this.setState({ userData: merged });
+            }
+          });
+      },
+      function(error) {
+        console.log("Error: " + error.code);
       }
-      array.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
-      if (array.length === 0) {
-        this.setState({ userData: [{ price: "-", name: "-", island: "-" }] });
-      } else {
-        this.setState({ userData: array });
-      }
-    });
+    );
   };
 
   componentDidMount() {
@@ -72,6 +82,23 @@ function compareEntry(a, b) {
   if (Number(a.price) > Number(b.price)) return -1;
   if (Number(b.price) > Number(a.price)) return 1;
   return 0;
+}
+
+function extractUnexpiredEntriesFromSnapshot(asdf) {
+  let b = [];
+  let now = new Date();
+  let dataset = asdf.val();
+  let keys = Object.keys(dataset);
+  let dataEntry, expiringTimestamp;
+  for (var i = 0; i < keys.length; i++) {
+    let k = keys[i];
+    dataEntry = dataset[k];
+    expiringTimestamp = new Date(dataEntry.expiringAtTimestamp);
+    if (now.getTime() < expiringTimestamp.getTime()) {
+      b.push(dataEntry);
+    }
+  }
+  return b;
 }
 
 export default App;
