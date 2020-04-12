@@ -5,7 +5,7 @@ import pig from "../../img/daisy.png";
 import Form from "./Form.js";
 import Rank from "./Rank.js";
 import Header from "./Header.js";
-import Firebase from "../Firebase/firebase.js";
+import {auth, db} from "../Firebase/firebase.js";
 
 // import  { FirebaseContext } from '../Firebase';
 export const AuthContext = React.createContext(null);
@@ -40,7 +40,7 @@ class App extends React.Component {
   getUserData = () => {
     var now = new Date();
     var hashKey = composeHashKey(now);
-    var ref = Firebase.database().ref("market/" + hashKey + "/");
+    var ref = db.ref("market/" + hashKey + "/");
     let array;
     ref.on("value", snapshot => {
       array = [];
@@ -61,13 +61,13 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getUserData();
-    Firebase.auth().onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {
       this.setState({ isSignedIn: !!user })
       console.log("user", user)
     })
   }
   authListener() {
-    Firebase.auth().onAuthStateChanged((user) => {
+    auth.onAuthStateChanged((user) => {
       console.log(user);
       if (user) {
         this.setState({ user });
