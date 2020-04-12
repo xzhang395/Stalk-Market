@@ -1,12 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App';
-import * as serviceWorker from './serviceWorker';
-// import Firebase, { FirebaseContext } from './components/Firebase';
-import {
-  BrowserRouter as Router,
-  Route,
-} from 'react-router-dom';
+// import * as serviceWorker from './serviceWorker';
+import { BrowserRouter as Router, Route} from 'react-router-dom';
 import Navigation from './components/Navigation/index.js';
 import LandingPage from './components/Landing';
 import SignUpPage from './components/SignUp';
@@ -17,10 +13,8 @@ import AccountPage from './components/Account';
 import AdminPage from './components/Admin';
 import * as ROUTES from './constants/routes.js';
 
-// require('dotenv').config();
 ReactDOM.render(
   <React.StrictMode>
-    {/* <FirebaseContext.Provider value={new Firebase()}> */}
     <Router>
             <div>
               <Navigation />
@@ -33,8 +27,6 @@ ReactDOM.render(
               <Route path={ROUTES.ADMIN} component={AdminPage} />
             </div>
           </Router>
-      {/* <App /> */}
-    {/* </FirebaseContext.Provider>, */}
   </React.StrictMode>,
   document.getElementById('root')
 );
@@ -42,5 +34,5 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+// serviceWorker.unregister();
          
