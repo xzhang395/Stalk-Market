@@ -6,6 +6,7 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSubmitted:false,
       price: 0,
       islandName: "",
       ownerName: ""
@@ -36,10 +37,15 @@ class Form extends React.Component {
   }
   handleSubmit(event) {
     this.writeUserData();
+    this.setState({
+      isSubmitted: true
+    });
     event.preventDefault();
   }
   render() {
-    return (
+    
+    return (this.state.isSubmitted ? <div className="submitted"><div className="submitted-confirm">
+    Submitted, Thank you!</div></div>:
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="question">
           <label htmlFor="basic">

@@ -2,6 +2,8 @@ import React from "react";
 import { composeHashkey, composePrevHashkey } from "../helper/functions.js";
 import "./App.css";
 import pig from "../img/daisy.png";
+import timmy from "../img/timmy.png";
+import tommy from "../img/tommy.png";
 import Form from "./Form.js";
 import Rank from "./Rank.js";
 import Header from "./Header.js";
@@ -11,6 +13,8 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      now: new Date(),
+      isSunday : new Date().getDay()==0,
       userData: [
         {
           price: 0,
@@ -22,7 +26,8 @@ class App extends React.Component {
   }
 
   getUserData = () => {
-    var now = new Date();
+    // var now = new Date();
+    let now = this.state.now;
     var hashkey = composeHashkey(now);
     var prevHashkey = composePrevHashkey(now);
     var db = Firebase.database();
@@ -40,7 +45,6 @@ class App extends React.Component {
               ...extractUnexpiredEntriesFromSnapshot(pastSnapshot)
             ];
             merged.sort(compareEntry); // this array is sorted from highest -> lowest, starting with 0
-
             if (merged.length === 0) {
               this.setState({
                 userData: [{ price: "-", name: "-", island: "-" }]
@@ -58,13 +62,17 @@ class App extends React.Component {
 
   componentDidMount() {
     this.getUserData();
+    this.setState({ now: new Date() });
   }
 
   render() {
     return (
       <div>
+      {this.state.isSunday && <div className="banner">It's Turnip Day!</div>}
         <div className="container">
-          <img className="pig" src={pig} />
+        {/* {this.state.isSunday && <img className="pig" src={pig} />}
+        {this.state.isSunday && <img className="timmy" src={timmy} /> <img className="tommy" src={tommy} />} */}
+        {this.state.isSunday? <img className="pig" src={pig} />:<div><img className="timmy" src={timmy} /> <img className="tommy" src={tommy} /></div>}
           <Header data={this.state.userData} />
           <Form />
         </div>
@@ -79,9 +87,16 @@ class App extends React.Component {
 
 //compose data key
 function compareEntry(a, b) {
+  var now = new Date();
+  if(now.getDay()!=0){
+    // console.log(now.getDay());
   if (Number(a.price) > Number(b.price)) return -1;
   if (Number(b.price) > Number(a.price)) return 1;
-  return 0;
+  return 0;}
+  else{
+    if (Number(a.price) < Number(b.price)) return -1;
+    if (Number(b.price) < Number(a.price)) return 1;
+    return 0;}
 }
 
 function extractUnexpiredEntriesFromSnapshot(asdf) {
