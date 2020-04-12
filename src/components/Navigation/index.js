@@ -1,25 +1,45 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-const Navigation = () => (
-  <div className="nav" >
+import {auth} from "../Firebase/firebase.js";
+
+
+class Navigation extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isSignedIn: false,
+    };
+  }
+componentDidMount() {
+  auth.onAuthStateChanged(user => {
+    this.setState({ isSignedIn: !!user })
+  })
+}
+
+handleClick = (e) => {
+  auth.signOut().then(function() {
+    // Sign-out successful.
+  }).catch(function(error) {
+    // An error happened.
+  });
+}
+
+render(){
+  return(
+    <div className="nav" >
     <ul>
-      <li>
-        <Link to={ROUTES.SIGN_IN}>Sign In</Link>
-      </li>
-      <li>
-        <Link to={ROUTES.LANDING}>Landing</Link>
-      </li>
-      <li>
-        <Link to={ROUTES.HOME}>Home</Link>
-      </li>
+      {this.state.isSignedIn &&<li>
+       <a href="#" onClick={() => { this.handleClick() }}>Sign Out</a>
+      </li>}
       <li>
         <Link to={ROUTES.ACCOUNT}>Account</Link>
       </li>
-      <li>
-        <Link to={ROUTES.ADMIN}>Admin</Link>
-      </li>
     </ul>
   </div>
-);
+  )
+}
+}
+
 export default Navigation;
+

@@ -1,5 +1,5 @@
 import React from "react";
-import Firebase from "../Firebase/firebase.js";
+import {auth, db} from "../Firebase/firebase.js";
 import { nextExpiringDate, composeHashKey } from "../../helper/functions.js";
 
 class Form extends React.Component {
@@ -16,17 +16,16 @@ class Form extends React.Component {
 
   writeUserData = () => {
     var today = new Date();
-    Firebase.database()
+    db
       .ref("market/" + composeHashKey(today) + "/")
       .push({
-        name: this.state.price,
-        island: this.state.islandName,
-        price: this.state.ownerName,
+        name: this.props.data.name,
+        island: this.props.data.island,
+        price: this.state.price,
         createdAtTimestamp: today.toISOString(),
-        expiringAtTimestamp: nextExpiringDate(today).toISOString()
+        expiringAtTimestamp: nextExpiringDate(today).toISOString(),
+        userid: auth.currentUser.uid,
       });
-
-    console.log("DATA SAVED");
   };
   handleChange(evt) {
     const value = evt.target.value;
@@ -53,7 +52,7 @@ class Form extends React.Component {
             onChange={this.handleChange}
           />
         </div>
-        <div className="question">
+        {/* <div className="question">
           <label htmlFor="basic">What's the name of your island?</label>
           <br />
           <input
@@ -72,7 +71,7 @@ class Form extends React.Component {
             value={this.state.ownerName}
             onChange={this.handleChange}
           />
-        </div>
+        </div> */}
         <input id="myBtn" type="submit" />
       </form>
     );

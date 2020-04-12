@@ -6,17 +6,24 @@ import Form from "./Form.js";
 import Rank from "./Rank.js";
 import Header from "./Header.js";
 import {auth, db} from "../Firebase/firebase.js";
+import SignInPage from "../SignIn"
+import {
+	withRouter
+} from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
 
-// import  { FirebaseContext } from '../Firebase';
-export const AuthContext = React.createContext(null);
 
 class App extends React.Component {
   constructor(props) {
     
     super(props);
     this.state = {
-      isLoggedIn: false,
-      setLoggedIn: false,
+      isSignedIn: false,
+      currentUser: {
+        newUser: true,
+        island: "",
+        name: ""
+      }, 
       userData: [
         {
           price: 0,
@@ -26,17 +33,6 @@ class App extends React.Component {
       ]
     };
   }
-  
-  // uiConfig = {
-  //   signInFlow: "popup",
-  //   signInOptions: [
-  //     Firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-  //     Firebase.auth.EmailAuthProvider.PROVIDER_ID
-  //   ],
-  //   callbacks: {
-  //     signInSuccess: () => false
-  //   }
-  // }
   getUserData = () => {
     var now = new Date();
     var hashKey = composeHashKey(now);
@@ -63,32 +59,42 @@ class App extends React.Component {
     this.getUserData();
     auth.onAuthStateChanged(user => {
       this.setState({ isSignedIn: !!user })
-      console.log("user", user)
+      if (!!user){
+        console.log(db.ref("user/"));
+
+      var ref = db.ref("user/");
+      ref.on("value", snapshot => {
+        
+        const dataset = snapshot.val();
+        var keys = Object.keys(dataset);
+        for (var i = 0; i < keys.length; i++) {
+          var k = keys[i];
+          var dataEntry = dataset[k];
+          if (k == auth.currentUser.uid){
+            this.setState({ currentUser: {
+              newUser: false,
+              island: dataEntry.island,
+              name: dataEntry.name
+            } });
+          }
+        }
+        if(this.state.currentUser.newUser){
+          this.props.history.push(ROUTES.ACCOUNT);
+        }
+      
+      })
+    }
     })
   }
-  authListener() {
-    auth.onAuthStateChanged((user) => {
-      console.log(user);
-      if (user) {
-        this.setState({ user });
-        localStorage.setItem('user', user.uid);
-      } else {
-        this.setState({ user: null });
-        localStorage.removeItem('user');   
-      }
-    });
-  }
+
   render() {
     return (
-      <AuthContext.Provider value={{ isLoggedIn:this.state.isLoggedIn, setLoggedIn:this.state.setLoggedIn }}>
-      {/* Is logged in? {JSON.stringify(isLoggedIn)} */}
-      <div>
+            <div>
         <div className="container">
-          {this.state.isLoggedIn ? <div>Signed In!</div>
-          : <div>Not Signed In</div>}
           <img className="pig" src={pig} />
           <Header data={this.state.userData} />
-          <Form />
+          {this.state.isSignedIn ? <Form data={this.state.currentUser}/>
+          : <SignInPage />}
         </div>
         <div className="ranking">
           <span className="rank-title">Current price around the world</span>
@@ -96,7 +102,7 @@ class App extends React.Component {
         </div>
       </div>
 
-      </AuthContext.Provider>
+     
 
     );
   }
