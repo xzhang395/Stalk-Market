@@ -22,6 +22,7 @@ body{
   top:0;
   left:0;
   right:0;
+  padding: 8px;
 }
 .nav ul{
   list-style: none;
@@ -29,8 +30,35 @@ body{
   justify-content: flex-end;
   margin-right:20px;
 }
+a:active {
+  text-decoration: none;
+}
 .nav li{
+  color: black !important;
+  font-weight: 700;
  padding-right: 16px;
+ text-decoration: none;
+}
+.LoginButtn{
+  border: none;
+  margin:auto;
+  display: flex;
+  align-items:center;
+  margin-top:40px;
+  padding: 16px;
+  font-size: 1em;
+  border-radius: 8px;
+  line-height: 24px;
+  vertical-align: middle;
+  cursor: pointer;
+  background-color: white;
+}
+.LoginButtn:hover{
+  background-color: #e4e4e4;
+}
+.google{
+  max-width: 24px;
+  padding-right:8px;
 }
 .container{
   margin:0px;

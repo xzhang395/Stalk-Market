@@ -2,6 +2,7 @@
 import React from "react";
 import { auth } from "../Firebase/firebase.js";
 import firebase from 'firebase/app';
+import google from "../../img/google.png";
 
 class SignInPage extends React.Component{
   constructor(props) {
@@ -20,7 +21,7 @@ class SignInPage extends React.Component{
 render(){
   return (
     <div>
-        <button className="LoginButtn" onClick={e => this.handleClick(e)} >Login</button>
+        <button className="LoginButtn" onClick={e => this.handleClick(e)} > <img className="google" src={google} /><span>Sign in with Google to enter your price</span></button>
     </div>
   );}
 };

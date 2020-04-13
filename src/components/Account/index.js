@@ -8,9 +8,9 @@ class AccountPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      price: 0,
-      islandName: "",
-      ownerName: ""
+      newUser: true,
+      island:'',
+      name:''
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,12 +18,10 @@ class AccountPage extends React.Component {
 
   writeUserData = () => {
 
-    console.log("MXQ: " + auth.currentUser.uid);
-
     db.ref("user/" + auth.currentUser.uid + "/")
       .set({
-        name: this.state.ownerName,
-        island: this.state.islandName,
+        name: this.state.name,
+        island: this.state.island,
       });
   };
 
@@ -32,6 +30,54 @@ class AccountPage extends React.Component {
     this.setState({
       [evt.target.name]: value
     });
+  }
+  componentDidMount(){
+    // if (this.props.location.state.currentUser.newUser) {
+    //   this.setState({  currentUser: {
+    //     newUser: true
+    //     // island: this.state.currentUser.island,
+    //     // name: this.state.currentUser.name
+    //   } });
+    // }else{
+    //   var ref = db.ref("user/"+auth.currentUser.uid+"/");
+    //   ref.on("value", snapshot => {
+    //     // console.log(snapshot.val().name)
+    //     this.setState({
+    //       currentUser: {
+    //         island: snapshot.val().island,
+    //         name: snapshot.val().name
+    //       }
+    //     });
+    //   })
+    // }
+      var ref = db.ref("user/");
+      ref.on("value", snapshot => {
+        // if (snapshot.val() != null) {
+          const dataset = snapshot.val();
+          var keys = Object.keys(dataset);
+          for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            var dataEntry = dataset[k];
+            if (k == auth.currentUser.uid) {
+              this.setState({
+
+                  newUser: false,
+                  island: dataEntry.island,
+                  name: dataEntry.name
+                
+              });
+            }
+          }
+          // if (this.state.newUser) {
+          //   this.setState({
+          //       newUser: true
+              
+          //   });
+          // }
+        // }
+      })
+    
+          
   }
 
   handleSubmit(event) {
@@ -42,17 +88,17 @@ class AccountPage extends React.Component {
   render() {
     return (  
       <div className="account">
-      {/* {console.log(this.props.location.state.currentUser.newUser)} */}
-        <Link to={ROUTES.LANDING}><BackButtn className="back" /></Link> 
-<h1>My profile</h1>
+      {/* {console.log(this.state.newUser)} */}
+      {!this.state.newUser && <Link to={ROUTES.LANDING}><BackButtn className="back" /></Link>}
+         {this.state.newUser? <h1>Set up your profile</h1>:<h1>My profile</h1>}
         <form className="form" onSubmit={this.handleSubmit}>
           <div className="question">
             <label htmlFor="basic">Island name</label>
             <br />
             <input
               type="text"
-              name="islandName"
-              value={this.state.islandName}
+              name="island"
+              value={this.state.island}
               onChange={this.handleChange}
             />
           </div>
@@ -61,12 +107,12 @@ class AccountPage extends React.Component {
             <br />
             <input
               type="text"
-              name="ownerName"
-              value={this.state.ownerName}
+              name="name"
+              value={this.state.name}
               onChange={this.handleChange}
             />
           </div>
-          <input value="Save" id="myBtn" type="submit" />
+          {this.state.newUser? <input value="Save" id="myBtn" type="submit" /> :<input value="Save Changes" id="myBtn" type="submit" />}
         </form>
       </div>
     );
