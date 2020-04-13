@@ -1,3 +1,4 @@
+  
 /**
  * Return the next expiration date relative to local time.
  *
@@ -31,8 +32,17 @@ function addDays(date, days) {
   return result;
 }
 
-//TODO: consolidate functions with those compose key functions in app.js
-export function composeHashKey(date) {
+Date.prototype.addHours = function(h) {
+  this.setTime(this.getTime() + (h*60*60*1000));
+  return this;
+}
+
+export function composePrevHashkey(date) {
+  var modifiedDate = date.addHours(-12);
+  return composeHashkey(modifiedDate);
+}
+
+export function composeHashkey(date) {
   var fullDate = composeDateString(date);
   if (date.getHours() < 12) {
     return fullDate + "-0"; // morning price

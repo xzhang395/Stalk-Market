@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import App from './components/App';
 // import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route} from 'react-router-dom';
-import Navigation from './components/Navigation/index.js';
 import AccountPage from './components/Account';
 import * as ROUTES from './constants/routes.js';
 
@@ -11,7 +10,6 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
             <div>
-              <Navigation />
               <Route exact path={ROUTES.LANDING} component={App} />
               <Route path={ROUTES.ACCOUNT} component={AccountPage} />
             </div>

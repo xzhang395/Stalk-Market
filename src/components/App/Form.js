@@ -1,11 +1,12 @@
 import React from "react";
 import {auth, db} from "../Firebase/firebase.js";
-import { nextExpiringDate, composeHashKey } from "../../helper/functions.js";
+import { nextExpiringDate, composeHashkey } from "../../helper/functions.js";
 
 class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSubmitted:false,
       price: 0,
       islandName: "",
       ownerName: ""
@@ -17,7 +18,7 @@ class Form extends React.Component {
   writeUserData = () => {
     var today = new Date();
     db
-      .ref("market/" + composeHashKey(today) + "/")
+    .ref("market/" + composeHashkey(today) + "/")
       .push({
         name: this.props.data.name,
         island: this.props.data.island,
@@ -35,10 +36,15 @@ class Form extends React.Component {
   }
   handleSubmit(event) {
     this.writeUserData();
+    this.setState({
+      isSubmitted: true
+    });
     event.preventDefault();
   }
   render() {
-    return (
+    return (this.state.isSubmitted ? <div className="submitted"><div className="submitted-confirm">
+    Submitted, Thank you!</div></div>:
+      
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="question">
           <label htmlFor="basic">
@@ -52,26 +58,6 @@ class Form extends React.Component {
             onChange={this.handleChange}
           />
         </div>
-        {/* <div className="question">
-          <label htmlFor="basic">What's the name of your island?</label>
-          <br />
-          <input
-            type="text"
-            name="islandName"
-            value={this.state.islandName}
-            onChange={this.handleChange}
-          />
-        </div>
-        <div className="question">
-          <label htmlFor="basic">What's your name?</label>
-          <br />
-          <input
-            type="text"
-            name="ownerName"
-            value={this.state.ownerName}
-            onChange={this.handleChange}
-          />
-        </div> */}
         <input id="myBtn" type="submit" />
       </form>
     );
