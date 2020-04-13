@@ -53,7 +53,7 @@ class Navigation extends React.Component {
               <a href="#" onClick={() => { this.handleClick() }}>Sign Out</a>
             </li>
             <li>
-            <a href="#" onClick={() => { this.handleClickAccout() }}>Account</a>
+            <a href="#" onClick={() => { this.handleClickAccout() }}>Profile</a>
               {/* <Link to={ROUTES.ACCOUNT}>Account</Link> */}
             </li>
           </ul>

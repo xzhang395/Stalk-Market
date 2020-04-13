@@ -48,7 +48,7 @@ class Form extends React.Component {
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="question">
           <label htmlFor="basic">
-            What's the current Stalk price on your island?
+            Current Stalk price on your island
           </label>
           <br />
           <input

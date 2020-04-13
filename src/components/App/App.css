@@ -33,6 +33,9 @@ body{
 a:active {
   text-decoration: none;
 }
+a{text-decoration: none;
+color:#854104;
+}
 .nav li{
   color: black !important;
   font-weight: 700;
@@ -228,5 +231,11 @@ padding: 4px 8px 4px 8px;
 @media only screen and (max-width: 960px) {
   .pig , .timmy, .tommy{
     visibility: hidden;
+}
+.container {
+  padding-top: 40px;
+}
+.nav ul {
+  justify-content: center;
 }
 }
