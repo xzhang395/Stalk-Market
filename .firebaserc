@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "stalk-market-4dc91"
+    "default": "stalk-market-4dc91",
+    "staging": "stalk-market-dev"
   }
 }
