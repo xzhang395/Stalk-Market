@@ -1,12 +1,12 @@
 import React from "react";
-import {auth, db} from "../Firebase/firebase.js";
+import { auth, db } from "../Firebase/firebase.js";
 import { nextExpiringDate, composeHashkey } from "../../helper/functions.js";
 
 class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isSubmitted:false,
+      isSubmitted: false,
       price: 0,
       islandName: "",
       ownerName: ""
@@ -17,16 +17,15 @@ class Form extends React.Component {
 
   writeUserData = () => {
     var today = new Date();
-    db
-    .ref("market/" + composeHashkey(today) + "/")
-      .push({
-        name: this.props.data.name,
-        island: this.props.data.island,
-        price: this.state.price,
-        createdAtTimestamp: today.toISOString(),
-        expiringAtTimestamp: nextExpiringDate(today).toISOString(),
-        userid: auth.currentUser.uid,
-      });
+    db.ref(
+      "market/" + composeHashkey(today) + "/" + auth.currentUser.uid + "/"
+    ).set({
+      name: this.props.data.name,
+      island: this.props.data.island,
+      price: this.state.price,
+      createdAtTimestamp: today.toISOString(),
+      expiringAtTimestamp: nextExpiringDate(today).toISOString()
+    });
   };
   handleChange(evt) {
     const value = evt.target.value;
@@ -42,14 +41,14 @@ class Form extends React.Component {
     event.preventDefault();
   }
   render() {
-    return (this.state.isSubmitted ? <div className="submitted"><div className="submitted-confirm">
-    Submitted, Thank you!</div></div>:
-      
+    return this.state.isSubmitted ? (
+      <div className="submitted">
+        <div className="submitted-confirm">Submitted, Thank you!</div>
+      </div>
+    ) : (
       <form className="form" onSubmit={this.handleSubmit}>
         <div className="question">
-          <label htmlFor="basic">
-            Current Stalk price on your island
-          </label>
+          <label htmlFor="basic">Current Stalk price on your island</label>
           <br />
           <input
             type="number"

@@ -8,14 +8,12 @@ import Form from "./Form.js";
 import Rank from "./Rank.js";
 import Header from "./Header.js";
 import { auth, db } from "../Firebase/firebase.js";
-import SignInPage from "../SignIn"
-import * as ROUTES from '../../constants/routes';
-import Navigation from '../Navigation/index.js';
-
+import SignInPage from "../SignIn";
+import * as ROUTES from "../../constants/routes";
+import Navigation from "../Navigation/index.js";
 
 class App extends React.Component {
   constructor(props) {
-
     super(props);
     this.state = {
       now: new Date(),
@@ -23,6 +21,7 @@ class App extends React.Component {
       isSignedIn: false,
       currentUser: {
         newUser: true,
+        uuid: "",
         island: "",
         name: ""
       },
@@ -63,7 +62,7 @@ class App extends React.Component {
             }
           });
       },
-      function (error) {
+      function(error) {
         console.log("Error: " + error.code);
       }
     );
@@ -73,42 +72,42 @@ class App extends React.Component {
     this.getUserData();
     this.setState({ now: new Date() });
     auth.onAuthStateChanged(user => {
-      this.setState({ isSignedIn: !!user })
+      this.setState({ isSignedIn: !!user });
       if (!!user) {
         var ref = db.ref("user/");
         ref.on("value", snapshot => {
-          // if (snapshot.val() != null) {
-            const dataset = snapshot.val();
-            var keys = Object.keys(dataset);
-            for (var i = 0; i < keys.length; i++) {
-              var k = keys[i];
-              var dataEntry = dataset[k];
-              if (k == auth.currentUser.uid) {
-                this.setState({
-                  currentUser: {
-                    newUser: false,
-                    island: dataEntry.island,
-                    name: dataEntry.name
-                  }
-                });
-              }
-            }
-            if (this.state.currentUser.newUser) {
-              this.props.history.push({
-                pathname: ROUTES.ACCOUNT,
-                state: {
-                  currentUser: {
-                    newUser: this.state.currentUser.newUser,
-                    island: this.state.currentUser.island,
-                    name: this.state.currentUser.name
-                  }
+          const dataset = snapshot.val();
+          var keys = Object.keys(dataset);
+          for (var i = 0; i < keys.length; i++) {
+            var k = keys[i];
+            var dataEntry = dataset[k];
+            if (k == auth.currentUser.uid) {
+              this.setState({
+                currentUser: {
+                  newUser: false,
+                  uuid: auth.currentUser.uid,
+                  island: dataEntry.island,
+                  name: dataEntry.name
                 }
               });
             }
+          }
+          if (this.state.currentUser.newUser) {
+            this.props.history.push({
+              pathname: ROUTES.ACCOUNT,
+              state: {
+                currentUser: {
+                  newUser: this.state.currentUser.newUser,
+                  island: this.state.currentUser.island,
+                  name: this.state.currentUser.name
+                }
+              }
+            });
+          }
           // }
-        })
+        });
       }
-    })
+    });
   }
 
   render() {
@@ -117,10 +116,20 @@ class App extends React.Component {
         <Navigation />
         {this.state.isSunday && <div className="banner">It's Turnip Day!</div>}
         <div className="container">
-          {this.state.isSunday ? <img className="pig" src={pig} /> : <div><img className="timmy" src={timmy} /> <img className="tommy" src={tommy} /></div>}
+          {this.state.isSunday ? (
+            <img className="pig" src={pig} />
+          ) : (
+            <div>
+              <img className="timmy" src={timmy} />{" "}
+              <img className="tommy" src={tommy} />
+            </div>
+          )}
           <Header data={this.state.userData} />
-          {this.state.isSignedIn ? <Form data={this.state.currentUser} />
-            : <SignInPage />}
+          {this.state.isSignedIn ? (
+            <Form data={this.state.currentUser} />
+          ) : (
+            <SignInPage />
+          )}
         </div>
         <div className="ranking">
           <span className="rank-title">Current price around the world</span>
@@ -138,8 +147,7 @@ function compareEntry(a, b) {
     if (Number(a.price) > Number(b.price)) return -1;
     if (Number(b.price) > Number(a.price)) return 1;
     return 0;
-  }
-  else {
+  } else {
     if (Number(a.price) < Number(b.price)) return -1;
     if (Number(b.price) < Number(a.price)) return 1;
     return 0;

@@ -2,27 +2,25 @@ import React from "react";
 import { auth, db } from "../Firebase/firebase.js";
 import { Link } from 'react-router-dom';
 import { ReactComponent as BackButtn } from "../../img/back.svg";
-import * as ROUTES from '../../constants/routes';
+import * as ROUTES from "../../constants/routes";
 
 class AccountPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       newUser: true,
-      island:'',
-      name:''
+      island: "",
+      name: ""
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   writeUserData = () => {
-
-    db.ref("user/" + auth.currentUser.uid + "/")
-      .set({
-        name: this.state.name,
-        island: this.state.island,
-      });
+    db.ref("user/" + auth.currentUser.uid + "/").set({
+      name: this.state.name,
+      island: this.state.island
+    });
   };
 
   handleChange(evt) {
@@ -31,53 +29,23 @@ class AccountPage extends React.Component {
       [evt.target.name]: value
     });
   }
-  componentDidMount(){
-    // if (this.props.location.state.currentUser.newUser) {
-    //   this.setState({  currentUser: {
-    //     newUser: true
-    //     // island: this.state.currentUser.island,
-    //     // name: this.state.currentUser.name
-    //   } });
-    // }else{
-    //   var ref = db.ref("user/"+auth.currentUser.uid+"/");
-    //   ref.on("value", snapshot => {
-    //     // console.log(snapshot.val().name)
-    //     this.setState({
-    //       currentUser: {
-    //         island: snapshot.val().island,
-    //         name: snapshot.val().name
-    //       }
-    //     });
-    //   })
-    // }
-      var ref = db.ref("user/");
-      ref.on("value", snapshot => {
-        // if (snapshot.val() != null) {
-          const dataset = snapshot.val();
-          var keys = Object.keys(dataset);
-          for (var i = 0; i < keys.length; i++) {
-            var k = keys[i];
-            var dataEntry = dataset[k];
-            if (k == auth.currentUser.uid) {
-              this.setState({
-
-                  newUser: false,
-                  island: dataEntry.island,
-                  name: dataEntry.name
-                
-              });
-            }
-          }
-          // if (this.state.newUser) {
-          //   this.setState({
-          //       newUser: true
-              
-          //   });
-          // }
-        // }
-      })
-    
-          
+  componentDidMount() {
+    var ref = db.ref("user/");
+    ref.on("value", snapshot => {
+      const dataset = snapshot.val();
+      var keys = Object.keys(dataset);
+      for (var i = 0; i < keys.length; i++) {
+        var k = keys[i];
+        var dataEntry = dataset[k];
+        if (k == auth.currentUser.uid) {
+          this.setState({
+            newUser: false,
+            island: dataEntry.island,
+            name: dataEntry.name
+          });
+        }
+      }
+    });
   }
 
   handleSubmit(event) {
@@ -86,11 +54,19 @@ class AccountPage extends React.Component {
     event.preventDefault();
   }
   render() {
-    return (  
+    return (
       <div className="account">
-      {/* {console.log(this.state.newUser)} */}
-      {!this.state.newUser && <Link to={ROUTES.LANDING}><BackButtn className="back" /></Link>}
-         {this.state.newUser? <h1>Set up your profile</h1>:<h1>My profile</h1>}
+        {/* {console.log(this.state.newUser)} */}
+        {!this.state.newUser && (
+          <Link to={ROUTES.LANDING}>
+            <BackButtn className="back" />
+          </Link>
+        )}
+        {this.state.newUser ? (
+          <h1>Set up your profile</h1>
+        ) : (
+          <h1>My profile</h1>
+        )}
         <form className="form" onSubmit={this.handleSubmit}>
           <div className="question">
             <label htmlFor="basic">Island name</label>
@@ -112,7 +88,11 @@ class AccountPage extends React.Component {
               onChange={this.handleChange}
             />
           </div>
-          {this.state.newUser? <input value="Save" id="myBtn" type="submit" /> :<input value="Save Changes" id="myBtn" type="submit" />}
+          {this.state.newUser ? (
+            <input value="Save" id="myBtn" type="submit" />
+          ) : (
+            <input value="Save Changes" id="myBtn" type="submit" />
+          )}
         </form>
       </div>
     );
