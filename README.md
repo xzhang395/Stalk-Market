@@ -1,7 +1,7 @@
 # Stalk-Market
 crowdsourcing the best turnip price
 
-# Hosting URL: [stalk-market.com](stalk-market.com)
+# Hosting URL: [www.stalk-market.com](www.stalk-market.com)
 
 # Prerequisite
 ### Setup firebase
