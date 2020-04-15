@@ -1,6 +1,6 @@
 import React from "react";
 import { auth, db } from "../Firebase/firebase.js";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 import { ReactComponent as BackButtn } from "../../img/back.svg";
 import * as ROUTES from "../../constants/routes";
 
@@ -17,7 +17,7 @@ class AccountPage extends React.Component {
   }
 
   writeUserData = () => {
-    db.ref("user/" + auth.currentUser.uid + "/").set({
+    db.ref("user/" + auth.currentUser.uid + "/").update({
       name: this.state.name,
       island: this.state.island
     });

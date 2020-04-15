@@ -16,19 +16,23 @@ class SignInPage extends React.Component {
       .then(result => {
         var user = result.user;
         console.log("user [" + user.displayName + "] signed in successfully");
-        // this.writeUserData();
+        this.updateUserData();
       })
       .catch(blah => console.log("error", blah));
   };
 
-  writeUserData = () => {
-    db.ref(
-      "user/" + auth.currentUser.uid + "/"
-    ).set({
-      email: auth.currentUser.email,
-      misc: auth.currentUser.photoURL,
-      lastLoginAt: new Date().toISOString()
-    });
+  updateUserData = () => {
+    console.log("updating user: " + auth.currentUser.uid);
+    var userDbKey = "user/" + auth.currentUser.uid + "/";
+    db.ref(userDbKey)
+      .once("value")
+      .then(function(snapshot) {
+        db.ref(userDbKey).update({
+          email: auth.currentUser.email,
+          url: auth.currentUser.photoURL,
+          lastLoginAt: new Date().toISOString()
+        });
+      });
   };
   render() {
     return (

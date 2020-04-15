@@ -17,7 +17,7 @@ class App extends React.Component {
     super(props);
     this.state = {
       now: new Date(),
-      isSunday: new Date().getDay() == 0,
+      isSunday: new Date().getDay() === 0,
       isSignedIn: false,
       currentUser: {
         newUser: true,
@@ -75,37 +75,43 @@ class App extends React.Component {
       this.setState({ isSignedIn: !!user });
       if (!!user) {
         var ref = db.ref("user/");
-        ref.on("value", snapshot => {
-          const dataset = snapshot.val();
-          var keys = Object.keys(dataset);
-          for (var i = 0; i < keys.length; i++) {
-            var k = keys[i];
-            var dataEntry = dataset[k];
-            if (k == auth.currentUser.uid) {
-              this.setState({
-                currentUser: {
-                  newUser: false,
-                  uuid: auth.currentUser.uid,
-                  island: dataEntry.island,
-                  name: dataEntry.name
-                }
-              });
-            }
-          }
-          if (this.state.currentUser.newUser) {
-            this.props.history.push({
-              pathname: ROUTES.ACCOUNT,
-              state: {
-                currentUser: {
-                  newUser: this.state.currentUser.newUser,
-                  island: this.state.currentUser.island,
-                  name: this.state.currentUser.name
+        ref.on(
+          "value",
+          snapshot => {
+            const dataset = snapshot.val();
+            // will process only if dataset exists (user table is not empty)
+            if (dataset) {
+              var keys = Object.keys(dataset);
+              for (var i = 0; i < keys.length; i++) {
+                var k = keys[i];
+                var dataEntry = dataset[k];
+                if (k === auth.currentUser.uid) {
+                  this.setState({
+                    currentUser: {
+                      newUser: false,
+                      uuid: auth.currentUser.uid,
+                      island: dataEntry.island,
+                      name: dataEntry.name
+                    }
+                  });
                 }
               }
-            });
-          }
-          // }
-        });
+              if (this.state.currentUser.newUser) {
+                this.props.history.push({
+                  pathname: ROUTES.ACCOUNT,
+                  state: {
+                    currentUser: {
+                      newUser: this.state.currentUser.newUser,
+                      island: this.state.currentUser.island,
+                      name: this.state.currentUser.name
+                    }
+                  }
+                });
+              }
+            }
+          },
+          error => console.log(error)
+        );
       }
     });
   }
